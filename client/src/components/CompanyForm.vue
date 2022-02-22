@@ -1,136 +1,343 @@
 <template>
-  <b-form @submit="onSubmit">
-    <b-form-group id="input-group-1" label="Name:" label-for="input-1">
-      <b-input-group size="sm" class="mb-2">
-        <b-input-group-prepend is-text>
-          <b-icon icon="person"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input type="text" placeholder="Company Name"></b-form-input>
-      </b-input-group>
-    </b-form-group>
-
-    <b-form-group id="input-group-2" label="Website:" label-for="input-2">
-      <b-input-group size="sm">
-        <b-input-group-prepend is-text>
-          <b-icon icon="envelope"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input type="email" placeholder="me@example.com"></b-form-input>
-      </b-input-group>
-    </b-form-group>
-
-    <b-form-group
-      id="input-group-3"
-      label="Number of Employees:"
-      label-for="input-3"
-    >
-      <b-input-group size="sm" class="mb-2">
-        <b-input-group-prepend is-text>
-          <b-icon icon="people-fill"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input
-          type="text"
-          placeholder="Number of Employees"
-          size="sm"
-        ></b-form-input>
-      </b-input-group>
-    </b-form-group>
-
-    <b-form-group id="input-group-4" label="Industry:" label-for="input-4">
-      <b-input-group size="sm" class="mb-2">
-        <b-input-group-prepend is-text>
-          <b-icon icon="person-fill"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input type="text" placeholder="Industry"></b-form-input>
-      </b-input-group>
-    </b-form-group>
-
-    <b-form-checkbox v-model="checked" name="check-button" switch>
-      Health Insuarance
-      <div v-if="checked">
-        <b-form-group
-          id="input-group-4"
-          label="Sum insured(in ₹)"
-          label-for="input-4"
-        >
-          <b-input-group size="sm" class="mb-2">
-            <b-input-group-prepend is-text>
-              <b-icon icon="cash-stack"></b-icon>
-            </b-input-group-prepend>
-            <b-form-input
-              type="text"
-              placeholder="Sum insured(in ₹)"
-            ></b-form-input>
-          </b-input-group>
-        </b-form-group>
-
-        <b-form-group v-slot="{ ariaDescribedby }">
-          <b-form-checkbox-group
-            v-model="selected"
-            :options="options"
-            :aria-describedby="ariaDescribedby"
-            switches
-            stacked
-          ></b-form-checkbox-group>
-        </b-form-group>
-      </div>
-    </b-form-checkbox>
-
-    <b-form-group v-slot="{ ariaDescribedby }">
-      <b-form-checkbox-group
-        v-model="select"
-        :options="opt"
-        :aria-describedby="ariaDescribedby"
-        switches
-        stacked
-      ></b-form-checkbox-group>
-    </b-form-group>
-    <b-form-group
-      id="input-group-4"
-      label="Number of paid leaves:"
-      label-for="input-4"
-    >
-      <b-input-group size="sm" class="mb-2">
-        <b-input-group-prepend is-text>
-          <b-icon icon="cash-stack"></b-icon>
-        </b-input-group-prepend>
-        <b-form-input
-          type="text"
-          placeholder="Number of paid leaves"
-        ></b-form-input>
-      </b-input-group>
-    </b-form-group>
-
-    <b-button type="submit" variant="primary">Next</b-button>
-  </b-form>
+  <div >
+    <div>
+    <b-row>
+      <b-col>
+        <img
+          class="image"
+          src="https://img.freepik.com/free-vector/company-concept-illustration_114360-2581.jpg?size=338&ext=jpg"
+          alt=""
+          width="700px"
+        />
+      </b-col>
+      <b-col>
+        <h2 class="heading">Company Details</h2>
+        <form @submit.prevent="addCompany">
+          <vue-form-generator :schema="schema" :model="model">
+          </vue-form-generator>
+          <b-button class="button" type="submit">Submit</b-button>
+        </form>
+      </b-col>
+    </b-row>
+    </div>
+    
+  </div>
 </template>
 
-
 <script>
+import VueFormGenerator from "vue-form-generator";
+import "vue-form-generator/dist/vfg.css";
+import gql from "graphql-tag";
 export default {
   name: "CompanyForm",
   data() {
+    
     return {
-      checked: false,
-      selected: [], // Must be an array reference!
-      options: [
-        { text: "Family Covered", value: "Family Covered" },
-        { text: "Parents Covered", value: "Parents Covered" },
-        { text: "Maternity Covered", value: "Maternity Covered" },
-      ],
-      select: [], // Must be an array reference!
-      opt: [
-        { text: "Gym membership", value: "Gym membership" },
-        { text: "Free doctor-on-call", value: "Free doctor-on-call" },
-        { text: "Flexible work timings", value: "Flexible work timings" },
-        { text: "Remote-work friendly ", value: "Remote-work friendly" },
-      ],
+
+      company_id: this.$route.query.company_id,
+      companies: '',
+      company:'',
+      model: {
+          
+      },
+      schema: {
+        fields: [
+          
+          {
+            type: "input",
+            inputType: "text",
+            label: "Company Name",
+            model: "companyName",
+            required: true,
+            placeholder: "Company's Name",
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Website",
+            model: "website",
+            required: true,
+            placeholder: "Company's Website",
+            validator: VueFormGenerator.validators.string,
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Company's Logo",
+            model: "logo",
+            required: true,
+            placeholder: "Add URL of company's logo",
+            validator: VueFormGenerator.validators.string,
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Number of Employees",
+            model: "noOfEmployee",
+            required: true,
+            placeholder: "Number of Employees in the company",
+            validator: VueFormGenerator.validators.number,
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Industry",
+            model: "industry",
+            required: true,
+            placeholder: "Industry",
+            validator: VueFormGenerator.validators.string,
+          },
+          {
+            type: "checkbox",
+            label: "Health insurance",
+            model: "healthInsurance",
+            default: false,
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Sum insured",
+            model: "sumInsured",
+            required: true,
+            placeholder: "in ₹",
+            hint: "Please enter sum insured",
+            visible: function (model) {
+              return model && model.healthInsurance == true;
+            },
+            validator: VueFormGenerator.validators.number,
+          },
+          {
+            type: "checkbox",
+            label: "Family covered",
+            model: "familyCovered",
+            default: false,
+            hint: "Does your insurance cover family? If yes then tick the box",
+            visible: function (model) {
+              return model && model.healthInsurance == true;
+            },
+          },
+          {
+            type: "checkbox",
+            label: "Parents covered",
+            model: "parentsCovered",
+            default: false,
+            hint: "Does your insurance cover your parents? If yes then tick the box",
+            visible: function (model) {
+              return model && model.healthInsurance == true;
+            },
+          },
+          {
+            type: "checkbox",
+            label: "Maternity covered",
+            model: "maternityCovered",
+            default: false,
+            hint: "Does your insurance cover maternity? If yes then tick the box",
+            visible: function (model) {
+              return model && model.healthInsurance == true;
+            },
+          },
+
+          {
+            type: "switch",
+            label: "Gym membership",
+            model: "gymMembership",
+            default: false,
+            textOn: "Included",
+            textOff: "Excluded",
+          },
+          {
+            type: "switch",
+            label: "Free doctor-on-call",
+            model: "freeDoctorOnCall",
+            default: false,
+            textOn: "Available",
+            textOff: "Unavailable",
+          },
+          {
+            type: "input",
+            inputType: "text",
+            label: "Number of paid leaves",
+            model: "noOfPaidLeaves",
+            required: true,
+            validator: VueFormGenerator.validators.number,
+          },
+          {
+            type: "switch",
+            label: "Flexible work timings",
+            model: "flexibleWorkTimings",
+            default: false,
+            textOn: "Available",
+            textOff: "Unavailable",
+          },
+          {
+            type: "switch",
+            label: "Remote-work friendly ",
+            model: "remoteWorkFriendly",
+            default: false,
+            textOn: "Yes",
+            textOff: "No",
+          },
+        ],
+      },
     };
   },
-  methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
+
+  watch: {
+    companyId(val) {
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation Addusers($id: String, $companyId: String) {
+              Adduser(id: $id, companyId: $companyId) {
+                id
+                name
+                email
+                companyId
+              }
+            }
+          `,
+          variables: {
+            id: "this.$route.query.user_id",
+            companyId: val,
+          },
+        })
+        .then((response) => {
+          this.$router.push("/companyDetails?company_id=" + val);
+        });
     },
   },
+  apollo: {
+    companies:{
+      query: gql`
+        query companies($companyId: String) {
+          companies(companyId: $companyId) {
+            companyId
+            companyName
+            website
+            logo
+            noOfEmployee
+            industry
+            healthInsurance
+            sumInsured
+            familyCovered
+            parentsCovered
+            maternityCovered
+            gymMembership
+            freeDoctorOnCall
+            noOfPaidLeaves
+            flexibleWorkTimings
+            remoteWorkFriendly
+          }
+        }
+      `,
+      variables() {
+        return {
+          companyId: this.company_id,
+        };
+      },
+      update(data) {
+          console.log("comapnyForm", data);
+          this.model=data.companies[0]
+          
+          return data.companies;
+        },
+    },
+  },
+  methods: {
+    addCompany() {
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation AddCompany(
+              $companyId: String
+              $companyName: String
+              $website: String
+              $logo: String
+              $noOfEmployee: String
+              $industry: String
+              $healthInsurance: Boolean
+              $sumInsured: String
+              $familyCovered: Boolean
+              $parentsCovered: Boolean
+              $maternityCovered: Boolean
+              $gymMembership: Boolean
+              $freeDoctorOnCall: Boolean
+              $noOfPaidLeaves: String
+              $flexibleWorkTimings: Boolean
+              $remoteWorkFriendly: Boolean
+            ) {
+              AddCompany(
+                companyId: $companyId
+                companyName: $companyName
+                website: $website
+                logo: $logo
+                noOfEmployee: $noOfEmployee
+                industry: $industry
+                healthInsurance: $healthInsurance
+                sumInsured: $sumInsured
+                familyCovered: $familyCovered
+                parentsCovered: $parentsCovered
+                maternityCovered: $maternityCovered
+                gymMembership: $gymMembership
+                freeDoctorOnCall: $freeDoctorOnCall
+                noOfPaidLeaves: $noOfPaidLeaves
+                flexibleWorkTimings: $flexibleWorkTimings
+                remoteWorkFriendly: $remoteWorkFriendly
+              ) {
+                companyId
+                companyName
+                website
+                logo
+                noOfEmployee
+                industry
+                healthInsurance
+                sumInsured
+                familyCovered
+                parentsCovered
+                maternityCovered
+                gymMembership
+                freeDoctorOnCall
+                noOfPaidLeaves
+                flexibleWorkTimings
+                remoteWorkFriendly
+              }
+            }
+          `,
+          variables: {
+            companyId:this.company_id,
+            companyName: this.model.companyName,
+            website: this.model.website,
+            logo: this.model.logo,
+            noOfEmployee: this.model.noOfEmployee,
+            industry: this.model.industry,
+            healthInsurance: this.model.healthInsurance,
+            sumInsured: this.model.sumInsured,
+            familyCovered: this.model.familyCovered,
+            parentsCovered: this.model.parentsCovered,
+            maternityCovered: this.model.maternityCovered,
+            gymMembership: this.model.gymMembership,
+            freeDoctorOnCall: this.model.freeDoctorOnCall,
+            noOfPaidLeaves: this.model.noOfPaidLeaves,
+            flexibleWorkTimings: this.model.flexibleWorkTimings,
+            remoteWorkFriendly: this.model.remoteWorkFriendly,
+          },
+        })
+
+        .then((response) => {
+          console.log(response);
+          this.companyId = response.data.AddCompany.companyId;
+        });
+    },
+  },
+  
 };
 </script>
+
+<style scoped>
+.heading {
+  padding: 10px, 10px, 10px, 10px;
+}
+.button {
+  margin-bottom: 100px;
+}
+</style>

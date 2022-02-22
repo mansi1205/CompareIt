@@ -13,50 +13,53 @@
 </template>
 
 <script>
-import Company from "./Company";
-import gql from "graphql-tag";
+  import Company from "./Company";
+  import gql from "graphql-tag";
 
-export default {
-  name: "CompanyList",
-  components: { Company },
-  data() {
-    return {
-      // Initialize your apollo data
-      company: "",
-    };
-  },
-  methods: {
-    createLink() {
-      this.$router.replace("/addcompany");
+  export default {
+    name: "CompanyList",
+    components: {
+      Company
     },
-  },
-  apollo: {
-    // Simple query that will update the 'hello' vue property
-    companies: {
-      query: gql`
+    data() {
+      return {
+        // Initialize your apollo data
+        company: "",
+      };
+    },
+    methods: {
+      createLink() {
+        this.$router.replace("/addcompany");
+      },
+    },
+    apollo: {
+      companies: {
+        query: gql `
         query companies {
           companies {
-            id
-            company_name
+            companyId
+            companyName
             logo
             industry
           }
         }
       `,
-      update(data) {
-        console.log("comapnyList,45", data);
-        return data.companies;
+        update(data) {
+          console.log("comapnyList,45", data);
+          return data.companies;
+        },
       },
     },
-  },
-};
+  };
+
 </script>
 <style scoped>
-.home {
-  padding: 10px 10px 10px 10px;
-}
+  .home {
+    padding: 10px 10px 10px 10px;
+  }
 
-.button {
-  margin-bottom: 10px;
-}
+  .button {
+    margin-bottom: 10px;
+  }
+
 </style>

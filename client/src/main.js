@@ -6,11 +6,12 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
-import VueFormGenerator from 'vue-form-generator'
-import 'vue-form-generator/dist/vfg.css'
+import VueFormGenerator from "vue-form-generator";
+import "vue-form-generator/dist/vfg.css";
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import "bootstrap/dist/css/bootstrap.css";
+import 'bootstrap/dist/css/bootstrap.min.css'
 import "bootstrap-vue/dist/bootstrap-vue.css";
 // 2
 import VueApollo from "vue-apollo";
@@ -38,7 +39,7 @@ const apolloClient = new ApolloClient({
 Vue.use(VueApollo);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
-Vue.use(VueFormGenerator)
+Vue.use(VueFormGenerator);
 // 6
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient
@@ -53,4 +54,3 @@ new Vue({
   router,
   render: h => h(App)
 });
-
